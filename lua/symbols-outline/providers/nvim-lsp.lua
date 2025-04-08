@@ -9,11 +9,11 @@ local function getParams()
 end
 
 function M.hover_info(bufnr, params, on_info)
-  local clients = vim.lsp.get_clients(bufnr)
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
   local used_client
 
-  for id, client in pairs(clients) do
-    if config.is_client_blacklisted(id) then
+  for _, client in ipairs(clients) do
+    if config.is_client_blacklisted(client.id) then
       goto continue
     else
       if client.server_capabilities.hoverProvider then
@@ -38,11 +38,11 @@ end
 
 -- probably change this
 function M.should_use_provider(bufnr)
-  local clients = vim.lsp.get_clients(bufnr)
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
   local ret = false
 
-  for id, client in pairs(clients) do
-    if config.is_client_blacklisted(id) then
+  for _, client in ipairs(clients) do
+    if config.is_client_blacklisted(client.id) then
       goto continue
     else
       if client.server_capabilities.documentSymbolProvider then
